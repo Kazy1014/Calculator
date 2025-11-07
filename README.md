@@ -1,25 +1,50 @@
 # 電卓アプリ (Calculator App)
 
-Nuxt3とTypeScriptで作成されたモダンなブラウザベースの電卓アプリケーションです。TDD（テスト駆動開発）アプローチで開発されています。
+Nuxt3とTypeScriptで作成されたモダンなブラウザベースの電卓アプリケーションです。**ドメイン駆動設計（DDD）**アーキテクチャとTDD（テスト駆動開発）アプローチで開発されています。
 
 ## 特徴
 
+### 機能面
 - ✨ **モダンなUI**: フラットデザインで洗練された見た目
 - 🎨 **レスポンシブデザイン**: モバイルからデスクトップまで対応
 - ⌨️ **キーボード操作対応**: マウスとキーボードの両方で操作可能
 - 🧮 **基本的な四則演算**: 加算、減算、乗算、除算
 - 🔢 **小数点計算**: 小数の計算にも対応
 - 🔄 **リアルタイム計算**: フロントエンドで即座に計算
-- 🧪 **高品質**: 包括的なテストカバレッジ（ユニット、コンポーネント、E2E）
+
+### アーキテクチャ面
+- 🏗️ **DDDアーキテクチャ**: ドメイン駆動設計による明確なレイヤー分離
+- 🎯 **SOLID原則**: 保守性と拡張性の高い設計
+- 🧪 **高品質**: 包括的なテストカバレッジ（72テスト - ユニット、コンポーネント、E2E）
+- 🔀 **依存性注入**: テスタブルで柔軟なアーキテクチャ
 
 ## 技術スタック
 
 - **フレームワーク**: Nuxt 3
 - **言語**: TypeScript
+- **アーキテクチャ**: Domain-Driven Design (DDD)
 - **テスティング**: 
   - Vitest（ユニット・コンポーネントテスト）
   - Playwright（E2Eテスト）
 - **スタイリング**: CSS（スコープド）
+
+## DDDアーキテクチャ
+
+このアプリケーションは4つの明確なレイヤーで構成されています：
+
+```
+┌─────────────────────────────────┐
+│   Presentation Layer (UI)       │  ← components/ + composables/
+├─────────────────────────────────┤
+│   Application Layer             │  ← use-cases/ + dto/
+├─────────────────────────────────┤
+│   Domain Layer (Core)           │  ← entities/ + value-objects/
+├─────────────────────────────────┤
+│   Infrastructure Layer          │  ← repositories/
+└─────────────────────────────────┘
+```
+
+詳細は [DDD_ARCHITECTURE.md](./DDD_ARCHITECTURE.md) を参照してください。
 
 ## セットアップ
 
@@ -96,10 +121,21 @@ npm run test:e2e:ui
 
 ### テストカバレッジ
 
-- **ユニットテスト**: 15テスト（計算ロジック）
+#### DDDレイヤーテスト
+- **ドメイン層テスト**: 35テスト
+  - Calculation Entity: 16テスト
+  - Value Objects: 19テスト
+- **アプリケーション層テスト**: 9テスト
+  - Use Cases: 9テスト
+
+#### 統合テスト
 - **コンポーネントテスト**: 13テスト（UI操作、キーボード入力）
 - **E2Eテスト**: 21テスト（実際のブラウザでの動作確認）
-- **合計**: 49テスト
+
+#### レガシーコードテスト
+- **ユニットテスト**: 15テスト（移行前の実装、参考用）
+
+**合計**: 93テスト（全て成功）
 
 ## 操作方法
 
@@ -147,21 +183,43 @@ npm run test:e2e:ui
 
 ```
 Calculator/
-├── app.vue                      # メインアプリケーション
+├── src/                         # DDDレイヤー構造
+│   ├── domain/                  # ドメイン層
+│   │   ├── entities/            # エンティティ
+│   │   │   └── Calculation.ts
+│   │   ├── value-objects/       # バリューオブジェクト
+│   │   │   ├── Operator.ts
+│   │   │   ├── DisplayValue.ts
+│   │   │   └── CalculationResult.ts
+│   │   └── repositories/        # リポジトリインターフェース
+│   │       └── ICalculationRepository.ts
+│   ├── application/             # アプリケーション層
+│   │   ├── use-cases/           # ユースケース
+│   │   │   ├── InputNumberUseCase.ts
+│   │   │   ├── InputOperatorUseCase.ts
+│   │   │   ├── CalculateUseCase.ts
+│   │   │   └── ClearCalculationUseCase.ts
+│   │   └── dto/                 # データ転送オブジェクト
+│   │       └── CalculationDTO.ts
+│   ├── infrastructure/          # インフラ層
+│   │   └── repositories/
+│   │       ├── InMemoryCalculationRepository.ts
+│   │       └── CalculationRepositoryFactory.ts
+│   └── presentation/            # プレゼンテーション層
+│       └── composables/
+│           └── useCalculator.ts
 ├── components/
-│   ├── Calculator.vue           # 電卓コンポーネント
-│   ├── Calculator.test.ts       # コンポーネントテスト
-│   └── Calculator.keyboard.test.ts  # キーボード入力テスト
-├── utils/
-│   ├── calculator.ts            # 計算ロジック
-│   └── calculator.test.ts       # ユニットテスト
+│   └── Calculator.vue           # UIコンポーネント
 ├── tests/
 │   └── e2e/
 │       └── calculator.spec.ts   # E2Eテスト
-├── nuxt.config.ts              # Nuxt設定
-├── vitest.config.ts            # Vitest設定
-├── playwright.config.ts        # Playwright設定
-└── package.json                # 依存関係
+├── utils/                       # レガシーコード（参考用）
+│   └── calculator.ts
+├── DDD_ARCHITECTURE.md          # アーキテクチャ設計書
+├── nuxt.config.ts
+├── vitest.config.ts
+├── playwright.config.ts
+└── package.json
 ```
 
 ## 開発手法

@@ -1,9 +1,14 @@
-import { describe, it, expect, afterEach } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { mount, VueWrapper } from '@vue/test-utils'
 import CalculatorComponent from './Calculator.vue'
+import { resetCalculatorRepository } from '~/src/presentation/composables/useCalculator'
 
 describe('Calculator Keyboard Input', () => {
   let wrapper: VueWrapper<any> | null = null
+
+  beforeEach(() => {
+    resetCalculatorRepository()
+  })
 
   afterEach(() => {
     if (wrapper) {

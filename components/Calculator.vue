@@ -1,133 +1,63 @@
 <template>
   <div class="calculator">
-    <div class="display" data-testid="display">{{ display }}</div>
+    <div class="display" data-testid="display">{{ calculator.display }}</div>
     <div class="buttons">
       <button
         class="btn btn-function"
         data-testid="btn-clear"
-        @click="handleClear"
+        @click="calculator.handleClear"
       >
         C
       </button>
-      <button class="btn btn-operator" data-testid="btn-divide" @click="handleOperator('/')">
+      <button class="btn btn-operator" data-testid="btn-divide" @click="calculator.handleOperator('/')">
         ÷
       </button>
-      <button class="btn btn-operator" data-testid="btn-multiply" @click="handleOperator('*')">
+      <button class="btn btn-operator" data-testid="btn-multiply" @click="calculator.handleOperator('*')">
         ×
       </button>
-      <button class="btn btn-operator" data-testid="btn-subtract" @click="handleOperator('-')">
+      <button class="btn btn-operator" data-testid="btn-subtract" @click="calculator.handleOperator('-')">
         -
       </button>
 
-      <button class="btn" data-testid="btn-7" @click="handleNumber('7')">7</button>
-      <button class="btn" data-testid="btn-8" @click="handleNumber('8')">8</button>
-      <button class="btn" data-testid="btn-9" @click="handleNumber('9')">9</button>
+      <button class="btn" data-testid="btn-7" @click="calculator.handleNumber('7')">7</button>
+      <button class="btn" data-testid="btn-8" @click="calculator.handleNumber('8')">8</button>
+      <button class="btn" data-testid="btn-9" @click="calculator.handleNumber('9')">9</button>
       <button
         class="btn btn-operator btn-add"
         data-testid="btn-add"
-        @click="handleOperator('+')"
+        @click="calculator.handleOperator('+')"
       >
         +
       </button>
 
-      <button class="btn" data-testid="btn-4" @click="handleNumber('4')">4</button>
-      <button class="btn" data-testid="btn-5" @click="handleNumber('5')">5</button>
-      <button class="btn" data-testid="btn-6" @click="handleNumber('6')">6</button>
+      <button class="btn" data-testid="btn-4" @click="calculator.handleNumber('4')">4</button>
+      <button class="btn" data-testid="btn-5" @click="calculator.handleNumber('5')">5</button>
+      <button class="btn" data-testid="btn-6" @click="calculator.handleNumber('6')">6</button>
 
-      <button class="btn" data-testid="btn-1" @click="handleNumber('1')">1</button>
-      <button class="btn" data-testid="btn-2" @click="handleNumber('2')">2</button>
-      <button class="btn" data-testid="btn-3" @click="handleNumber('3')">3</button>
+      <button class="btn" data-testid="btn-1" @click="calculator.handleNumber('1')">1</button>
+      <button class="btn" data-testid="btn-2" @click="calculator.handleNumber('2')">2</button>
+      <button class="btn" data-testid="btn-3" @click="calculator.handleNumber('3')">3</button>
       <button
         class="btn btn-equals"
         data-testid="btn-equals"
-        @click="handleEquals"
+        @click="calculator.handleEquals"
       >
         =
       </button>
 
-      <button class="btn btn-zero" data-testid="btn-0" @click="handleNumber('0')">
+      <button class="btn btn-zero" data-testid="btn-0" @click="calculator.handleNumber('0')">
         0
       </button>
-      <button class="btn" data-testid="btn-decimal" @click="handleDecimal">.</button>
+      <button class="btn" data-testid="btn-decimal" @click="calculator.handleDecimal">.</button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
-import { Calculator, type Operator } from '~/utils/calculator'
+import { useCalculator } from '~/src/presentation/composables/useCalculator'
 
-const calculator = new Calculator()
-const display = ref(calculator.getDisplay())
-
-const handleNumber = (digit: string) => {
-  calculator.inputNumber(digit)
-  display.value = calculator.getDisplay()
-}
-
-const handleOperator = (operator: Operator) => {
-  calculator.inputOperator(operator)
-  display.value = calculator.getDisplay()
-}
-
-const handleEquals = () => {
-  calculator.calculate()
-  display.value = calculator.getDisplay()
-}
-
-const handleDecimal = () => {
-  calculator.inputDecimal()
-  display.value = calculator.getDisplay()
-}
-
-const handleClear = () => {
-  calculator.clear()
-  display.value = calculator.getDisplay()
-}
-
-// キーボード入力の処理
-const handleKeyPress = (event: KeyboardEvent) => {
-  const key = event.key
-
-  // 数字キー
-  if (key >= '0' && key <= '9') {
-    handleNumber(key)
-    return
-  }
-
-  // 演算子キー
-  if (key === '+' || key === '-' || key === '*' || key === '/') {
-    handleOperator(key as Operator)
-    return
-  }
-
-  // 小数点
-  if (key === '.' || key === ',') {
-    handleDecimal()
-    return
-  }
-
-  // イコール（Enter または =）
-  if (key === 'Enter' || key === '=') {
-    event.preventDefault()
-    handleEquals()
-    return
-  }
-
-  // クリア（Escape または c または C）
-  if (key === 'Escape' || key.toLowerCase() === 'c') {
-    handleClear()
-    return
-  }
-}
-
-onMounted(() => {
-  window.addEventListener('keydown', handleKeyPress)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('keydown', handleKeyPress)
-})
+// DDDアーキテクチャのComposableを使用
+const calculator = useCalculator()
 </script>
 
 <style scoped>
