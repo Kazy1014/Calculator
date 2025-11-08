@@ -173,6 +173,8 @@ export class ScientificCalculator {
         return this.sqrt(value)
       case 'abs':
         return this.abs(value)
+      case 'exp':
+        return this.exp(value)
       default:
         throw new Error(`未知の関数: ${functionName}`)
     }

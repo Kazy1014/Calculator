@@ -17,6 +17,8 @@
         @input-character="onInputCharacter"
         @backspace="onBackspace"
         @clear="onClear"
+        @all-clear="onClear"
+        @clear-entry="onClear"
         @evaluate="onEvaluate"
         @save-to-memory="onSaveToMemory"
         @recall-from-memory="onRecallFromMemory"

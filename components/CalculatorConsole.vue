@@ -14,46 +14,73 @@
 
     <!-- ボタン -->
     <div class="buttons-grid">
-      <!-- 第1行: メモリと関数 -->
-      <button class="btn btn-function" @click="$emit('clearMemory')">MC</button>
-      <button class="btn btn-function" @click="$emit('recallFromMemory')">MR</button>
-      <button class="btn btn-function" @click="saveCurrentToMemory">AC</button>
-      <button class="btn btn-function" @click="$emit('toggleAngleMode')">DEG/RAD</button>
+      <!-- 第1行: メモリと角度モード -->
+      <button class="btn btn-memory" @click="$emit('clearMemory')">MC</button>
+      <button class="btn btn-memory" @click="$emit('recallFromMemory')">MR</button>
+      <button class="btn btn-memory" @click="saveCurrentToMemory">M+</button>
+      <button class="btn btn-memory" @click="$emit('toggleAngleMode')">DEG</button>
 
-      <!-- 第2行: クリアとバックスペース -->
-      <button class="btn btn-clear" data-testid="btn-clear" @click="$emit('clear')">C</button>
-      <button class="btn btn-operator" data-testid="btn-backspace" @click="$emit('backspace')">←</button>
-      <button class="btn btn-operator" data-testid="btn-left-paren" @click="$emit('inputCharacter', '(')">(</button>
-      <button class="btn btn-operator" data-testid="btn-right-paren" @click="$emit('inputCharacter', ')')">)</button>
+      <!-- 第2行: クリアと特殊機能 -->
+      <button class="btn btn-secondary btn-all-clear" data-testid="btn-all-clear" @click="$emit('allClear')">AC</button>
+      <button class="btn btn-secondary" data-testid="btn-clear" @click="$emit('clearEntry')">C</button>
+      <button class="btn btn-secondary" data-testid="btn-backspace" @click="$emit('backspace')">←</button>
+      <button class="btn btn-secondary" data-testid="btn-percent" @click="$emit('inputCharacter', '%')">%</button>
 
-      <!-- 第3-6行: 数字と演算子 -->
-      <button class="btn btn-function" data-testid="btn-sin" @click="inputFunction('sin')">sin</button>
-      <button class="btn btn-function" data-testid="btn-cos" @click="inputFunction('cos')">cos</button>
-      <button class="btn btn-function" data-testid="btn-tan" @click="inputFunction('tan')">tan</button>
-      <button class="btn btn-operator" data-testid="btn-divide" @click="$emit('inputCharacter', '/')">÷</button>
-
-      <button class="btn btn-function" data-testid="btn-log" @click="inputFunction('log')">log</button>
+      <!-- 第3行: 7, 8, 9, ÷ -->
       <button class="btn" data-testid="btn-7" @click="$emit('inputCharacter', '7')">7</button>
       <button class="btn" data-testid="btn-8" @click="$emit('inputCharacter', '8')">8</button>
       <button class="btn" data-testid="btn-9" @click="$emit('inputCharacter', '9')">9</button>
-      <button class="btn btn-operator" data-testid="btn-multiply" @click="$emit('inputCharacter', '*')">×</button>
+      <button class="btn btn-operator" data-testid="btn-divide" @click="$emit('inputCharacter', '/')">÷</button>
 
-      <button class="btn btn-function" data-testid="btn-ln" @click="inputFunction('ln')">ln</button>
+      <!-- 第4行: 4, 5, 6, × -->
       <button class="btn" data-testid="btn-4" @click="$emit('inputCharacter', '4')">4</button>
       <button class="btn" data-testid="btn-5" @click="$emit('inputCharacter', '5')">5</button>
       <button class="btn" data-testid="btn-6" @click="$emit('inputCharacter', '6')">6</button>
-      <button class="btn btn-operator" data-testid="btn-subtract" @click="$emit('inputCharacter', '-')">-</button>
+      <button class="btn btn-operator" data-testid="btn-multiply" @click="$emit('inputCharacter', '*')">×</button>
 
-      <button class="btn btn-function" data-testid="btn-sqrt" @click="inputFunction('sqrt')">√</button>
+      <!-- 第5行: 1, 2, 3, - -->
       <button class="btn" data-testid="btn-1" @click="$emit('inputCharacter', '1')">1</button>
       <button class="btn" data-testid="btn-2" @click="$emit('inputCharacter', '2')">2</button>
       <button class="btn" data-testid="btn-3" @click="$emit('inputCharacter', '3')">3</button>
-      <button class="btn btn-operator" data-testid="btn-add" @click="$emit('inputCharacter', '+')">+</button>
+      <button class="btn btn-operator" data-testid="btn-subtract" @click="$emit('inputCharacter', '-')">-</button>
 
-      <button class="btn btn-function" data-testid="btn-power" @click="$emit('inputCharacter', '^')">x^y</button>
-      <button class="btn btn-zero" data-testid="btn-0" @click="$emit('inputCharacter', '0')">0</button>
+      <!-- 第6行: 0, ., =, + -->
+      <button class="btn" data-testid="btn-0" @click="$emit('inputCharacter', '0')">0</button>
       <button class="btn" data-testid="btn-decimal" @click="$emit('inputCharacter', '.')">.</button>
       <button class="btn btn-equals" data-testid="btn-equals" @click="$emit('evaluate')">=</button>
+      <button class="btn btn-operator" data-testid="btn-add" @click="$emit('inputCharacter', '+')">+</button>
+    </div>
+
+    <!-- 科学計算ボタン -->
+    <div class="scientific-section">
+      <div class="scientific-header">
+        <span>科学計算機能</span>
+      </div>
+      <div class="scientific-grid">
+        <!-- 三角関数 -->
+        <button class="btn btn-scientific" data-testid="btn-sin" @click="inputFunction('sin')">sin</button>
+        <button class="btn btn-scientific" data-testid="btn-cos" @click="inputFunction('cos')">cos</button>
+        <button class="btn btn-scientific" data-testid="btn-tan" @click="inputFunction('tan')">tan</button>
+        <button class="btn btn-scientific" data-testid="btn-power" @click="$emit('inputCharacter', '^')">x^y</button>
+
+        <!-- 逆三角関数 -->
+        <button class="btn btn-scientific" @click="inputFunction('asin')">asin</button>
+        <button class="btn btn-scientific" @click="inputFunction('acos')">acos</button>
+        <button class="btn btn-scientific" @click="inputFunction('atan')">atan</button>
+        <button class="btn btn-scientific" @click="inputFunction('exp')">exp</button>
+
+        <!-- 対数と特殊関数 -->
+        <button class="btn btn-scientific" data-testid="btn-log" @click="inputFunction('log')">log</button>
+        <button class="btn btn-scientific" data-testid="btn-ln" @click="inputFunction('ln')">ln</button>
+        <button class="btn btn-scientific" data-testid="btn-sqrt" @click="inputFunction('sqrt')">√</button>
+        <button class="btn btn-scientific" @click="inputFunction('abs')">abs</button>
+
+        <!-- 定数と括弧 -->
+        <button class="btn btn-scientific" @click="insertConstant('pi')">π</button>
+        <button class="btn btn-scientific" @click="insertConstant('e')">e</button>
+        <button class="btn btn-scientific" data-testid="btn-left-paren" @click="onParenthesisClick('(')">(</button>
+        <button class="btn btn-scientific" data-testid="btn-right-paren" @click="onParenthesisClick(')')">)</button>
+      </div>
     </div>
   </div>
 </template>
@@ -73,6 +100,8 @@ const emit = defineEmits<{
   inputCharacter: [char: string]
   backspace: []
   clear: []
+  allClear: []
+  clearEntry: []
   evaluate: []
   saveToMemory: [value: number]
   recallFromMemory: []
@@ -83,6 +112,18 @@ const emit = defineEmits<{
 const inputFunction = (functionName: string) => {
   emit('inputCharacter', functionName)
   emit('inputCharacter', '(')
+}
+
+const insertConstant = (constant: string) => {
+  if (constant === 'pi') {
+    emit('inputCharacter', Math.PI.toString())
+  } else if (constant === 'e') {
+    emit('inputCharacter', Math.E.toString())
+  }
+}
+
+const onParenthesisClick = (paren: string) => {
+  emit('inputCharacter', paren)
 }
 
 const saveCurrentToMemory = () => {
@@ -152,97 +193,162 @@ const saveCurrentToMemory = () => {
 
 .buttons-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 10px;
 }
 
 .btn {
-  padding: 20px;
-  font-size: 1.3rem;
+  padding: 24px;
+  font-size: 1.5rem;
   font-weight: 500;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
-  transition: all 0.1s ease;
-  background: #f5f5f5;
-  color: #2c3e50;
+  transition: all 0.15s ease;
+  background: #f0f0f0;
+  color: #333;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .btn:hover {
-  background: #e8e8e8;
-  transform: translateY(-1px);
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .btn:active {
   transform: translateY(0);
-  box-shadow: none;
-  background: #d9d9d9;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-.btn-clear {
-  background: #e74c3c;
+/* メモリボタン（青色） */
+.btn-memory {
+  background: #5b9bd5;
   color: white;
   font-weight: 600;
-  grid-column: span 1;
+  font-size: 1.2rem;
 }
 
-.btn-clear:hover {
-  background: #d62c1a;
+.btn-memory:hover {
+  background: #4a8bc2;
 }
 
-.btn-clear:active {
-  background: #c0392b;
+.btn-memory:active {
+  background: #3a7aae;
 }
 
+/* セカンダリボタン（グレー） */
+.btn-secondary {
+  background: #b0b0b0;
+  color: white;
+  font-weight: 600;
+  font-size: 1.3rem;
+}
+
+.btn-secondary:hover {
+  background: #9a9a9a;
+}
+
+.btn-secondary:active {
+  background: #888;
+}
+
+/* ACボタン（少し濃いグレー） */
+.btn-all-clear {
+  background: #989898;
+  font-weight: 700;
+}
+
+.btn-all-clear:hover {
+  background: #828282;
+}
+
+.btn-all-clear:active {
+  background: #707070;
+}
+
+/* 特殊演算子ボタン（オレンジ - A） */
+.btn-operator-special {
+  background: #d97850;
+  color: white;
+  font-weight: 600;
+  font-size: 1.5rem;
+}
+
+.btn-operator-special:hover {
+  background: #c86840;
+}
+
+.btn-operator-special:active {
+  background: #b85830;
+}
+
+/* 演算子ボタン（オレンジ） */
 .btn-operator {
-  background: #3498db;
+  background: #d97850;
   color: white;
   font-weight: 600;
+  font-size: 1.8rem;
 }
 
 .btn-operator:hover {
-  background: #2980b9;
+  background: #c86840;
 }
 
 .btn-operator:active {
-  background: #21618c;
+  background: #b85830;
 }
 
-.btn-function {
-  background: #9b59b6;
-  color: white;
-  font-weight: 600;
-  font-size: 1rem;
-}
-
-.btn-function:hover {
-  background: #8e44ad;
-}
-
-.btn-function:active {
-  background: #7d3c98;
-}
-
+/* イコールボタン（緑色） */
 .btn-equals {
-  background: #27ae60;
+  background: #70ad47;
   color: white;
   font-weight: 600;
-  grid-row: span 2;
-  font-size: 2rem;
+  font-size: 1.8rem;
 }
 
 .btn-equals:hover {
-  background: #229954;
+  background: #5f9639;
 }
 
 .btn-equals:active {
-  background: #1e8449;
+  background: #4f7f2f;
 }
 
-.btn-zero {
-  grid-column: span 2;
+/* 科学計算セクション */
+.scientific-section {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 2px solid #e0e0e0;
+}
+
+.scientific-header {
+  text-align: center;
+  margin-bottom: 15px;
+  color: #555;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.scientific-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.btn-scientific {
+  background: #8e7cc3;
+  color: white;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 16px;
+}
+
+.btn-scientific:hover {
+  background: #7d6bb0;
+}
+
+.btn-scientific:active {
+  background: #6c5a9e;
 }
 
 @media (max-width: 768px) {
@@ -257,6 +363,16 @@ const saveCurrentToMemory = () => {
 
   .main-display {
     font-size: 2rem;
+  }
+
+  .scientific-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+
+  .btn-scientific {
+    padding: 12px;
+    font-size: 0.85rem;
   }
 }
 </style>

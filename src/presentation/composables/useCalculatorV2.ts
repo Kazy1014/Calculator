@@ -101,14 +101,16 @@ export function useCalculatorV2() {
   // Actions - Input
   const inputCharacter = (char: string) => {
     const result = inputCharacterUseCase.execute(currentExpression.value, char)
-    currentExpression.value = Expression.create(result.expression)
+    // 入力中は括弧のバランスが取れていなくてもOK
+    currentExpression.value = currentExpression.value.append(char)
     displayValue.value = result.displayValue
     errorMessage.value = result.error
   }
 
   const backspace = () => {
     const result = backspaceUseCase.execute(currentExpression.value)
-    currentExpression.value = Expression.create(result.expression)
+    // バックスペース後も括弧のバランスが取れていなくてもOK
+    currentExpression.value = currentExpression.value.backspace()
     displayValue.value = result.displayValue
     errorMessage.value = result.error
   }
@@ -149,7 +151,13 @@ export function useCalculatorV2() {
   const replayHistoryEntry = (entryId: string) => {
     const result = replayHistoryEntryUseCase.execute(entryId)
     if (result) {
-      currentExpression.value = Expression.create(result.expression)
+      // 履歴から復元する場合、括弧は完全な式なのでcreateを使用
+      try {
+        currentExpression.value = Expression.create(result.expression)
+      } catch (e) {
+        // エラーの場合は空の式にする
+        currentExpression.value = Expression.empty()
+      }
       displayValue.value = result.displayValue
       errorMessage.value = result.error
     }
