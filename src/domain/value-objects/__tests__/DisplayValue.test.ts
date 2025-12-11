@@ -92,5 +92,33 @@ describe('DisplayValue Value Object', () => {
       expect(dv1.equals(dv2)).toBe(false)
     })
   })
+
+  describe('数値フォーマット', () => {
+    it('1000以上の整数にカンマ区切りを適用', () => {
+      const value = DisplayValue.fromNumber(1234)
+      expect(value.toString()).toBe('1,234')
+    })
+
+    it('1000未満の整数はカンマ区切りなし', () => {
+      const value = DisplayValue.fromNumber(999)
+      expect(value.toString()).toBe('999')
+    })
+
+    it('入力中の数値にもカンマ区切りを適用', () => {
+      const value = DisplayValue.fromString('1234')
+      expect(value.toString()).toBe('1,234')
+    })
+
+    it('小数はカンマ区切りを適用（整数部分のみ）', () => {
+      const value = DisplayValue.fromNumber(1234.56)
+      const result = value.toString()
+      expect(result).toContain('1,234')
+    })
+
+    it('カンマを含む文字列から数値に変換できる', () => {
+      const value = DisplayValue.fromString('1,234')
+      expect(value.toNumber()).toBe(1234)
+    })
+  })
 })
 

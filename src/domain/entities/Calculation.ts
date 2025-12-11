@@ -12,7 +12,8 @@ export class Calculation {
     private displayValue: DisplayValue,
     private previousValue: number,
     private currentOperator: Operator | null,
-    private waitingForNewValue: boolean
+    private waitingForNewValue: boolean,
+    private expressionString: string = '' // 式文字列（括弧や関数を含む）
   ) {}
 
   /**
@@ -26,7 +27,8 @@ export class Calculation {
       DisplayValue.zero(),
       0,
       null,
-      true
+      true,
+      ''
     )
   }
 
@@ -133,6 +135,41 @@ export class Calculation {
     this.previousValue = 0
     this.currentOperator = null
     this.waitingForNewValue = true
+    this.expressionString = ''
+  }
+
+  /**
+   * 式文字列を取得
+   */
+  getExpressionString(): string {
+    return this.expressionString
+  }
+
+  /**
+   * 式文字列を設定
+   */
+  setExpressionString(expression: string): void {
+    this.expressionString = expression
+  }
+
+  /**
+   * 最後の1文字を削除（バックスペース）
+   */
+  backspace(): void {
+    if (this.displayValue.isError()) {
+      return
+    }
+
+    const currentValue = this.displayValue.toString()
+    if (currentValue.length <= 1) {
+      this.displayValue = DisplayValue.zero()
+      this.waitingForNewValue = true
+    } else {
+      const newValue = currentValue.slice(0, -1)
+      // カンマを削除した場合の処理
+      const cleanedValue = newValue.replace(/,/g, '')
+      this.displayValue = DisplayValue.fromString(cleanedValue)
+    }
   }
 
   /**

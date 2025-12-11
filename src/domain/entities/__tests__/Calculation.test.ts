@@ -170,5 +170,55 @@ describe('Calculation Entity', () => {
       expect(calc.getDisplayValue().toString()).toBe('0')
     })
   })
+
+  describe('backspace', () => {
+    it('最後の1文字を削除できる', () => {
+      const calc = Calculation.create()
+      calc.inputNumber('1')
+      calc.inputNumber('2')
+      calc.inputNumber('3')
+      calc.backspace()
+      expect(calc.getDisplayValue().toString()).toBe('12')
+    })
+
+    it('1文字のみの場合は0に戻る', () => {
+      const calc = Calculation.create()
+      calc.inputNumber('5')
+      calc.backspace()
+      expect(calc.getDisplayValue().toString()).toBe('0')
+    })
+
+    it('エラー状態の場合はバックスペースできない', () => {
+      const calc = Calculation.create()
+      calc.inputNumber('5')
+      calc.inputOperator(Operator.create('/'))
+      calc.inputNumber('0')
+      calc.calculate() // エラーになる
+      calc.backspace()
+      expect(calc.getDisplayValue().toString()).toBe('Error')
+    })
+  })
+
+  describe('expressionString', () => {
+    it('式文字列を設定できる', () => {
+      const calc = Calculation.create()
+      calc.setExpressionString('2+3')
+      expect(calc.getExpressionString()).toBe('2+3')
+    })
+
+    it('式文字列を取得できる', () => {
+      const calc = Calculation.create()
+      expect(calc.getExpressionString()).toBe('')
+      calc.setExpressionString('sqrt(16)')
+      expect(calc.getExpressionString()).toBe('sqrt(16)')
+    })
+
+    it('クリア時に式文字列もクリアされる', () => {
+      const calc = Calculation.create()
+      calc.setExpressionString('2+3')
+      calc.clear()
+      expect(calc.getExpressionString()).toBe('')
+    })
+  })
 })
 
